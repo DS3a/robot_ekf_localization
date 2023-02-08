@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(template_pkg_ros2)
+project(pratham_ekf_localization)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -25,17 +25,23 @@ ament_python_install_package(python_lib)
 # find_package(<dependency> REQUIRED)
 
 
+#set_target_properties(kalman PROPERTIES
+#  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/include/kalman"
+#  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/kalman"
+#)
 ### NOTE add Cpp nodes
-add_executable(node src/node.cpp)
-target_include_directories(node PUBLIC
+add_executable(localization_node src/localization_node.cpp)
+target_include_directories(localization_node PUBLIC
 ### NOTE you can add additional include dirs for Cpp here
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/kalman>
 ### NOTE
   $<INSTALL_INTERFACE:include>)
-target_compile_features(node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(localization_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
 
 ### NOTE add dependencies to the cpp target
-ament_target_dependencies(node
+ament_target_dependencies(localization_node
   "rclcpp"
   "std_msgs"
   "nav_msgs"
@@ -44,7 +50,7 @@ ament_target_dependencies(node
 ### NOTE
 
 
-install(TARGETS node
+install(TARGETS localization_node
   DESTINATION lib/${PROJECT_NAME})
 
 
